@@ -30,8 +30,8 @@ public class LauncherActivity extends Activity {
 
     public void startXash(View view)
     {
-		Intent intent = new Intent(Intent.ACTION_VIEW,null);
-		intent.setType("xash3d.android/game");
+		Intent intent = new Intent();
+		intent.setAction("in.celest.xash3d.START");
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		SharedPreferences.Editor editor = mPref.edit();

@@ -1,0 +1,10 @@
+Android/Jave part
+ * AndroidManifest.xml:
+ * * Rename manifest package
+ * * Change appliction label
+ * src/in/celest/xash3d/LauncherActivity.java
+ * * Set mod gamedir
+ * * Set launch button title
+
+Native part
+ * Place folders with your mod project to jni/

@@ -1,25 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Set your package name here -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="in.celest.xash3d.bshift"
+      package="in.celest.xash3d.mod_example"
       android:versionCode="1"
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="5"/>
-    <application android:label="@string/app_name"
-                 android:debuggable="true">
-        <activity android:name=".LauncherActivity"
-                  android:label="@string/app_name"
+    <!-- Set your application name here -->
+    <application android:label="Example-mod" android:debuggable="true">
+    <!-- Set your launcher title here -->
+        <activity android:name="in.celest.xash3d.LauncherActivity"
+                  android:label="Example mod"
 			android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--		<activity android:name=".ShortcutActivity" android:label="@string/text_shortcut" android:theme="@android:style/Theme.Dialog" 
-			android:windowSoftInputMode="adjustResize">
-			<intent-filter>
-				<action android:name="android.intent.action.CREATE_SHORTCUT" />
-				<category android:name="android.intent.category.DEFAULT" />
-			</intent-filter>
-		</activity>-->
     </application>
 </manifest> 

@@ -5,7 +5,7 @@ CFLAGS_OPT_X86 := -mtune=atom -march=atom -mssse3 -mfpmath=sse -funroll-loops -p
 CFLAGS_HARDFP := -D_NDK_MATH_NO_SOFTFP=1 -mhard-float -mfloat-abi=hard -DLOAD_HARDFP -DSOFTFP_LINK
 APPLICATIONMK_PATH = $(call my-dir)
 
-XASH3D_CONFIG := $(APPLICATIONMK_PATH)/bs_config.mk
+XASH3D_CONFIG := $(APPLICATIONMK_PATH)/mod_config.mk
 
 APP_ABI := x86 armeabi-v7a-hard armeabi
 APP_MODULES := server client

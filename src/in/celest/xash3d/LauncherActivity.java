@@ -52,22 +52,53 @@ public class LauncherActivity extends Activity {
         setContentView(launcher);
 		mPref = getSharedPreferences("mod", 0);
 		cmdArgs.setText(mPref.getString("argv","-dev 3 -log"));
+		ExtractAssets.extractPAK(this, false);
 	}
 
-    public void startXash(View view)
-    {
-		Intent intent = new Intent();
-		intent.setAction("in.celest.xash3d.START");
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	private Intent prepareIntent(Intent i)
+	{
+		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		SharedPreferences.Editor editor = mPref.edit();
 		editor.putString("argv", cmdArgs.getText().toString());
 		editor.commit();
 		editor.apply();
-		if(cmdArgs.length() != 0) intent.putExtra("argv", cmdArgs.getText().toString());
+		if(cmdArgs.length() != 0) i.putExtra("argv", cmdArgs.getText().toString());
 		// Uncomment to set gamedir here
 		// intent.putExtra("gamedir", "mod" );
-		intent.putExtra("gamelibdir", getFilesDir().getAbsolutePath().replace("/files","/lib"));
-		startActivity(intent);
-    }
+		i.putExtra("gamelibdir", getFilesDir().getAbsolutePath().replace("/files","/lib"));
+		
+		return i;
+	}
+	
+    public void startXash(View view)
+    {
+		try
+		{
+			Intent intent = new Intent();
+			intent.setAction("in.celest.xash3d.START");
+			intent = prepareIntent(intent);
+			startActivity(intent);
+			return;
+		}
+		catch(Exception e){}
+		try
+		{
+			Intent intent = new Intent();
+			intent.setComponent(new ComponentName("in.celest.xash3d.hl.test", "in.celest.xash3d.XashActivity")); 
+			intent = prepareIntent(intent);
+			startActivity(intent);
+			return;
+		}
+		catch(Exception e){}
+		try
+		{
+			Intent intent = new Intent();
+			intent.setComponent(new ComponentName("in.celest.xash3d.hl", "in.celest.xash3d.XashActivity")); 
+			intent = prepareIntent(intent);
+			startActivity(intent);
+			return;
+		}
+		catch(Exception e){}
+	}
 }

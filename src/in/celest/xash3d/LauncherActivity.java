@@ -120,7 +120,6 @@ public class LauncherActivity extends Activity {
 
 		editor.putString("argv", argv);
 		editor.commit();
-		editor.apply();
 
 		// Command-line arguments
 		// if not passed, uses arguments from xash3d package

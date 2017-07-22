@@ -6,7 +6,10 @@
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="5"/>
     <!-- Set your application name here -->
-    <application android:label="Example-mod" android:debuggable="true">
+    <application android:label="Example-mod" android:debuggable="true"
+		>
+		<!--set icon-->
+		<!--android:icon="@drawable/ic_launcher">-->
     <!-- Set your launcher title here -->
         <activity android:name="in.celest.xash3d.LauncherActivity"
                   android:label="Example mod"

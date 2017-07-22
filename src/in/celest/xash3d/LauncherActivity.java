@@ -20,7 +20,9 @@ import android.content.SharedPreferences;
 import java.io.File;
 import android.graphics.drawable.*;
 import android.os.*;
-import junit.runner.*;
+import android.app.*;
+import android.view.View.*;
+import android.content.DialogInterface;
 
 public class LauncherActivity extends Activity {
 	static EditText cmdArgs;
@@ -30,14 +32,17 @@ public class LauncherActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+		// set theme
 		if ( sdk >= 21 )
 			super.setTheme( 0x01030224 );
 		else super.setTheme( 0x01030005 );
+
         // Build layout
         LinearLayout launcher = new LinearLayout(this);
         launcher.setOrientation(LinearLayout.VERTICAL);
         launcher.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		//launcher.setPadding(16,16,16,16);
+
 		launcher.setBackgroundColor(0xFF252525);
 		TextView launcherTitle = new TextView(this);
         LayoutParams titleparams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
@@ -61,7 +66,6 @@ public class LauncherActivity extends Activity {
 		LinearLayout launcherBody = new LinearLayout(this);
         launcherBody.setOrientation(LinearLayout.VERTICAL);
         launcherBody.setLayoutParams(titleparams);
-		//launcherBody.setPadding(16,16,16,16);
 		launcherBody.setBackgroundColor(0xFF353535);
 		LinearLayout launcherBorder = new LinearLayout(this);
 		launcherBorder.setLayoutParams(titleparams);
@@ -78,22 +82,21 @@ public class LauncherActivity extends Activity {
 		launcherBorder.setPadding(10,0,10,20);
 		launcher.addView(launcherBorder);
 
-		
-		
         TextView titleView = new TextView(this);
         titleView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         titleView.setText("Command-line arguments");
         titleView.setTextAppearance(this, android.R.attr.textAppearanceLarge);
-        cmdArgs = new EditText(this);
+
+		cmdArgs = new EditText(this);
         cmdArgs.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+		cmdArgs.setSingleLine(true);
 		Button startButton = new Button(this);
+
 		// Set launch button title here
 		startButton.setText("Launch " + "mod" + "!");
 		LayoutParams buttonParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		buttonParams.gravity = 5;
 		startButton.setLayoutParams(buttonParams);
-		//startButton.setBackgroundColor(0xFF555555);
-		//startButton.setTextColor(0xFFFFFFFF);
 		startButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,11 +105,14 @@ public class LauncherActivity extends Activity {
         });
 		launcherBody.addView(titleView);
 		launcherBody.addView(cmdArgs);
+
 		// Add other options here
+
 		launcher.addView(startButton);
         setContentView(launcher);
 		mPref = getSharedPreferences("mod", 0);
 		cmdArgs.setText(mPref.getString("argv","-dev 3 -log"));
+
 		// Uncomment this if you have pak file
 		// ExtractAssets.extractPAK(this, false);
 	}
@@ -193,5 +199,15 @@ public class LauncherActivity extends Activity {
 			return;
 		}
 		catch(Exception e){}
+		new AlertDialog.Builder(this)
+		.setTitle("Error")
+		.setMessage("Failed to start Xash3D FWGS engine\nIs it installed?")
+		.setCancelable(false)
+		.setPositiveButton("Ok", new DialogInterface.OnClickListener()
+		{
+			public void onClick(DialogInterface i, int w){
+				LauncherActivity.this.finish();
+			}
+		}).show();
 	}
 }

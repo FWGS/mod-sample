@@ -13,21 +13,73 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Button;
 import android.widget.TextView;
+import android.view.Window;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.content.SharedPreferences;
 import java.io.File;
+import android.graphics.drawable.*;
+import android.os.*;
+import junit.runner.*;
 
 public class LauncherActivity extends Activity {
 	static EditText cmdArgs;
 	static SharedPreferences mPref;
+	public static final int sdk = Integer.valueOf(Build.VERSION.SDK);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		if ( sdk >= 21 )
+			super.setTheme( 0x01030224 );
+		else super.setTheme( 0x01030005 );
         // Build layout
         LinearLayout launcher = new LinearLayout(this);
         launcher.setOrientation(LinearLayout.VERTICAL);
-        launcher.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+        launcher.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		//launcher.setPadding(16,16,16,16);
+		launcher.setBackgroundColor(0xFF252525);
+		TextView launcherTitle = new TextView(this);
+        LayoutParams titleparams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		titleparams.setMargins(5,20,5,1);
+		launcherTitle.setLayoutParams(titleparams);
+        launcherTitle.setText("Mod Title");
+        launcherTitle.setTextAppearance(this, android.R.attr.textAppearanceMedium);
+		launcherTitle.setTextSize(25);
+		launcherTitle.setBackgroundColor(0xFF555555);
+		launcherTitle.setCompoundDrawablePadding(10);
+		try
+		{
+			launcherTitle.setCompoundDrawablesWithIntrinsicBounds(getApplicationContext().getPackageManager().getApplicationIcon(getPackageName()),null,null,null);
+			launcherTitle.setPadding(6,9,6,0);
+		}
+		catch(Exception e)
+		{
+			launcherTitle.setPadding(6,6,6,6);
+		}
+		launcher.addView(launcherTitle);
+		LinearLayout launcherBody = new LinearLayout(this);
+        launcherBody.setOrientation(LinearLayout.VERTICAL);
+        launcherBody.setLayoutParams(titleparams);
+		//launcherBody.setPadding(16,16,16,16);
+		launcherBody.setBackgroundColor(0xFF353535);
+		LinearLayout launcherBorder = new LinearLayout(this);
+		launcherBorder.setLayoutParams(titleparams);
+		launcherBorder.setBackgroundColor(0xFF555555);
+		launcherBorder.setOrientation(LinearLayout.VERTICAL);
+
+		LinearLayout launcherBorder2 = new LinearLayout(this);
+		launcherBorder2.setLayoutParams(titleparams);
+		launcherBorder2.setOrientation(LinearLayout.VERTICAL);
+		launcherBorder2.setBackgroundColor(0xFF252525);
+		launcherBorder2.addView(launcherBody);
+		launcherBorder2.setPadding(10,0,10,10);
+		launcherBorder.addView(launcherBorder2);
+		launcherBorder.setPadding(10,0,10,20);
+		launcher.addView(launcherBorder);
+
+		
+		
         TextView titleView = new TextView(this);
         titleView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
         titleView.setText("Command-line arguments");
@@ -37,17 +89,19 @@ public class LauncherActivity extends Activity {
 		Button startButton = new Button(this);
 		// Set launch button title here
 		startButton.setText("Launch " + "mod" + "!");
-		LayoutParams buttonParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LayoutParams buttonParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		buttonParams.gravity = 5;
 		startButton.setLayoutParams(buttonParams);
+		//startButton.setBackgroundColor(0xFF555555);
+		//startButton.setTextColor(0xFFFFFFFF);
 		startButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startXash(v);
             }
         });
-		launcher.addView(titleView);
-		launcher.addView(cmdArgs);
+		launcherBody.addView(titleView);
+		launcherBody.addView(cmdArgs);
 		// Add other options here
 		launcher.addView(startButton);
         setContentView(launcher);

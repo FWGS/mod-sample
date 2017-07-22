@@ -82,6 +82,7 @@ public class ExtractAssets
 				if( mPref.getInt( "pakversion", 0 ) == PAK_VERSION && !force )
 					return;
 				extractFile(context, "extras.pak");
+				// add custom files here
 				SharedPreferences.Editor editor = mPref.edit();
 				editor.putInt( "pakversion", PAK_VERSION );
 				editor.commit();

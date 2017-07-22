@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.content.SharedPreferences;
+import java.io.File;
 
 public class LauncherActivity extends Activity {
 	static EditText cmdArgs;
@@ -52,22 +53,58 @@ public class LauncherActivity extends Activity {
         setContentView(launcher);
 		mPref = getSharedPreferences("mod", 0);
 		cmdArgs.setText(mPref.getString("argv","-dev 3 -log"));
-		ExtractAssets.extractPAK(this, false);
+		// Uncomment this if you have pak file
+		// ExtractAssets.extractPAK(this, false);
 	}
 
 	private Intent prepareIntent(Intent i)
 	{
+		String argv = cmdArgs.getText().toString();
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		SharedPreferences.Editor editor = mPref.edit();
-		editor.putString("argv", cmdArgs.getText().toString());
+
+		editor.putString("argv", argv);
 		editor.commit();
 		editor.apply();
-		if(cmdArgs.length() != 0) i.putExtra("argv", cmdArgs.getText().toString());
+
+		// Command-line arguments
+		// if not passed, uses arguments from xash3d package
+		// Uncoment this if you are using client from other package
+		/*
+		String libserver = getFilesDir().getAbsolutePath().replace("/files","/lib/libserver_hardfp.so");
+		if( !(new File(libserver).exists()) )
+			libserver = getFilesDir().getAbsolutePath().replace("/files","/lib/libserver.so");
+		argv = "-dll "+ libserver + " " + argv;
+		*/
+		if(argv.length() != 0)
+			i.putExtra("argv", argv);
+
+		// default gamedir
+		// may be overriden by -game command-line option
 		// Uncomment to set gamedir here
-		// intent.putExtra("gamedir", "mod" );
+		/*intent.putExtra("gamedir", "mod" );*/
+
+		// default library package
+		// if you are using client from other package (not from half-life),
+		// replace following line by:
+		/*i.putExtra("gamelibdir", "/data/data/<clientpkgname>/lib");*/
 		i.putExtra("gamelibdir", getFilesDir().getAbsolutePath().replace("/files","/lib"));
 		
+		// if you are using pak file, uncomment this:
+		// i.putExtra("pakfile", getFilesDir().getAbsolutePath() + "/extras.pak");
+
+		// you may pass extra enviroment variables to game
+		// it is availiable from game code with getenv() function
+		/*
+		String envp[] = 
+		{
+			"VAR1", "value1",
+			"VAR2", "value2"
+		};
+		i.putExtra("env", envp);
+		*/
+
 		return i;
 	}
 	
@@ -82,6 +119,9 @@ public class LauncherActivity extends Activity {
 			return;
 		}
 		catch(Exception e){}
+		// some samsung devices have 
+		// completely broken intent resolver
+		// so try specify exact component here
 		try
 		{
 			Intent intent = new Intent();

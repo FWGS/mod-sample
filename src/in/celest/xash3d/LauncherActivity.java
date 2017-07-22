@@ -1,33 +1,33 @@
 package in.celest.xash3d;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.content.Intent;
-import android.widget.EditText;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.Button;
-import android.widget.TextView;
-import android.view.Window;
-import android.content.ComponentName;
-import android.content.pm.PackageManager;
-import android.content.SharedPreferences;
-import java.io.File;
-import android.graphics.drawable.*;
-import android.os.*;
 import android.app.*;
-import android.view.View.*;
-import android.content.DialogInterface;
+import android.content.*;
+import android.graphics.*;
+import android.os.*;
+import android.text.*;
+import android.text.style.*;
+import android.view.*;
+import android.widget.*;
+import android.widget.LinearLayout.*;
 
 public class LauncherActivity extends Activity {
 	static EditText cmdArgs;
 	static SharedPreferences mPref;
 	public static final int sdk = Integer.valueOf(Build.VERSION.SDK);
+	
+	public SpannableString styleButtonString(String str)
+	{
+		if(sdk < 21)
+			str = str.toUpperCase();
+
+		SpannableString spanString = new SpannableString(str.toUpperCase());
+		
+		if(sdk < 21)
+			spanString.setSpan(new StyleSpan(Typeface.BOLD), 0, str.length(), 0);
+
+		return spanString;
+	}
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +47,8 @@ public class LauncherActivity extends Activity {
 		TextView launcherTitle = new TextView(this);
         LayoutParams titleparams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		titleparams.setMargins(5,20,5,1);
+		LayoutParams buttonparams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+		buttonparams.setMargins(10,20,10,20);
 		launcherTitle.setLayoutParams(titleparams);
         launcherTitle.setText("Mod Title");
         launcherTitle.setTextAppearance(this, android.R.attr.textAppearanceMedium);
@@ -66,7 +68,7 @@ public class LauncherActivity extends Activity {
 		LinearLayout launcherBody = new LinearLayout(this);
         launcherBody.setOrientation(LinearLayout.VERTICAL);
         launcherBody.setLayoutParams(titleparams);
-		launcherBody.setBackgroundColor(0xFF353535);
+		launcherBody.setBackgroundColor(0xFF454545);
 		LinearLayout launcherBorder = new LinearLayout(this);
 		launcherBorder.setLayoutParams(titleparams);
 		launcherBorder.setBackgroundColor(0xFF555555);
@@ -75,7 +77,7 @@ public class LauncherActivity extends Activity {
 		LinearLayout launcherBorder2 = new LinearLayout(this);
 		launcherBorder2.setLayoutParams(titleparams);
 		launcherBorder2.setOrientation(LinearLayout.VERTICAL);
-		launcherBorder2.setBackgroundColor(0xFF252525);
+		launcherBorder2.setBackgroundColor(0xFF353535);
 		launcherBorder2.addView(launcherBody);
 		launcherBorder2.setPadding(10,0,10,10);
 		launcherBorder.addView(launcherBorder2);
@@ -88,16 +90,30 @@ public class LauncherActivity extends Activity {
         titleView.setTextAppearance(this, android.R.attr.textAppearanceLarge);
 
 		cmdArgs = new EditText(this);
-        cmdArgs.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+        cmdArgs.setLayoutParams(buttonparams);
 		cmdArgs.setSingleLine(true);
+		if(sdk < 21)
+		{
+			cmdArgs.setBackgroundColor(0xFF353535);
+			cmdArgs.setTextColor(0xFFFFFFFF);
+			cmdArgs.setPadding(5,5,5,5);
+		}
 		Button startButton = new Button(this);
 
 		// Set launch button title here
-		startButton.setText("Launch " + "mod" + "!");
+		startButton.setText(styleButtonString("Launch " + "mod" + "!"));
 		LayoutParams buttonParams = new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		buttonParams.gravity = 5;
 		startButton.setLayoutParams(buttonParams);
-		startButton.setOnClickListener( new View.OnClickListener() {
+		if(sdk < 21)
+		{
+			startButton.getBackground().setAlpha(96);
+			startButton.getBackground().invalidateSelf();
+			startButton.setTextColor(0xFFFFFFFF);
+			startButton.setTextAppearance(this, android.R.attr.textAppearanceLarge);
+			startButton.setTextSize(20);
+		}
+		startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startXash(v);
